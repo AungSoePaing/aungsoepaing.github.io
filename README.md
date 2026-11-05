@@ -1,39 +1,44 @@
-# Chirpy Starter
+# aungsoepaing.github.io
 
-[![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)][gem]&nbsp;
-[![GitHub license](https://img.shields.io/github/license/cotes2020/chirpy-starter.svg?color=blue)][mit]
+Personal blog — [https://aungsoepaing.github.io](https://aungsoepaing.github.io)
 
-A minimal, ready-to-use template for creating a blog with the [**Chirpy**][chirpy] Jekyll theme. Get up and running in minutes with all critical files pre-configured.
+Built with [Astro](https://astro.build) and the
+[Fuwari](https://github.com/saicaca/fuwari) theme. Deploys to GitHub Pages via
+`.github/workflows/deploy.yml` on every push to `main`.
 
-## Why This Starter Exists
+## Write a post
 
-When installing Chirpy through [RubyGems.org][gem], Jekyll can only read a subset of theme files (`_data`, `_layouts`, `_includes`, `_sass`, `assets`) and limited `_config.yml` options from the gem. As a result, users cannot enjoy the full out-of-the-box experience that Chirpy offers.
-
-To unlock all features, the following files must be present in your Jekyll site:
-
-```shell
-.
-├── _config.yml
-├── _plugins
-├── _tabs
-└── index.html
+```sh
+pnpm install                 # first time only
+pnpm new-post my-post-name   # creates src/content/posts/my-post-name.md
 ```
 
-This starter bundles those files from the latest **Chirpy** release along with a [CD][CD] workflow, so you can start writing immediately.
+Then edit the front matter:
 
-## Usage
+```yaml
+---
+title: My Post Title
+published: 2026-11-05
+description: One-line summary used in listings and SEO.
+tags: [web, sqli]
+category: CTF
+draft: true   # set to false (or remove) to publish
+---
+```
 
-Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wiki).
+Posts with `draft: true` are excluded from the production build — keep
+work-in-progress posts as drafts. A CTF writeup skeleton is available as
+`src/content/posts/writeup-template.md` (kept as a draft).
 
-## Contributing
+## Local preview
 
-This repository is automatically updated with new releases from the theme repository. If you encounter any issues or want to contribute to its improvement, please visit the [theme repository][chirpy] to provide feedback.
+```sh
+pnpm dev       # dev server at http://localhost:4321
+pnpm build     # production build to ./dist/ (what GitHub Pages serves)
+```
 
-## License
+## Customize
 
-This work is published under [MIT][mit] License.
-
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy/
-[CD]: https://en.wikipedia.org/wiki/Continuous_deployment
-[mit]: https://github.com/cotes2020/chirpy-starter/blob/master/LICENSE
+- Site title, subtitle, colors, profile, nav links: `src/config.ts`
+- About page: `src/content/spec/about.md`
+- Site URL / base path: `astro.config.mjs`
