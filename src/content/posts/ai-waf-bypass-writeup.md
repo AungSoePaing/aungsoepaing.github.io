@@ -1,5 +1,5 @@
 ---
-title: "ArtificialUniversity — AI WAF Bypass (web) writeup"
+title: "ACS — AI WAF Bypass (web) writeup"
 published: 2026-11-05
 description: "An ML guard that scores the wrong parameters: probing the shipped model offline, mapping its weird digit-shaped gaps, then walking straight past it with a GET/POST parser mismatch."
 tags: [web, hackthebox, sqli, machine-learning, waf-bypass]
