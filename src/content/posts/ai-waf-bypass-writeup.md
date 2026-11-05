@@ -1,7 +1,7 @@
 ---
 title: "ACS — AI WAF Bypass (web) writeup"
 published: 2026-11-05
-description: "An ML guard that scores the wrong parameters: probing the shipped model offline, mapping its weird digit-shaped gaps, then walking straight past it with a GET/POST parser mismatch."
+description: "An ML guard that scores the wrong parameters, then gets beaten with its own training data: offline model probing, digit-shaped gaps, a GET/POST parser mismatch, and a Naive Bayes log-likelihood dilution attack that outvotes the malicious n-grams with people's names."
 tags: [web, hackthebox, sqli, machine-learning, waf-bypass]
 category: CTF
 draft: false
@@ -9,9 +9,12 @@ draft: false
 
 A login page guarded by a machine-learning WAF, sitting on top of the most textbook SQL
 injection you'll ever see. The catch: the model is genuinely good at its job — every classic
-bypass I threw at it got blocked. The way in wasn't through the model at all. The WAF and the
-app disagree about *which copy of a parameter* they're reading, and once you see that, the
-"AI" never even gets a look at your payload.
+bypass I threw at it got blocked, and it took two completely different breaks to get through.
+The first wasn't through the model at all: the WAF and the app disagree about *which copy of a
+parameter* they're reading, so the "AI" never even sees the payload. The second *is* through
+the model — Naive Bayes adds up evidence per n-gram, and if you know which tokens its training
+data considers maximally innocent, you can drown the malicious signal under a crowd of
+witnesses. Both work; the post covers each.
 
 ## Setup
 
@@ -151,12 +154,71 @@ Login successful! Welcome back, admin. Here is your flag: ACS{██████
 
 *(flag redacted — no freebies, go earn it)*
 
+## Round two: beating the model with its own training data
+
+The HPP split is a parser bug, and it felt like a dodge — I wanted a payload the *model itself*
+scores as benign. Going back to the arithmetic: MultinomialNB decides by
+`class prior + Σ log P(n-gram | class)`. Three facts fell out of the pickles:
+
+- Training was **87% benign** (12,186 vs 1,882 samples), so an input matching *zero* vocabulary
+  n-grams defaults to benign with a +1.87 log-margin. Empty string, emoji, garbage — all pass.
+- The single quote `'` is itself one of the most malicious-weighted unigrams (−5.03). Every
+  injection geometry *must* contain quotes, so there's a fixed penalty you can't engineer away.
+- The penalty is **fixed**, but the benign side of the scale is open-ended: any token the
+  training data loves adds +1.18 of innocent evidence, as many times as you like.
+
+So: dilution. If the payload core costs about −6, stack enough maximally-benign tokens after it
+and the sum tips positive — while MySQL reads the padding as harmless string content.
+
+My first attempt made things *worse*: padding with `user login password account` drove the
+margin from −6 to −112. Of course it did — SQLi payloads are full of
+`select username, password from users`, so login-vocabulary leans **malicious** in this corpus.
+The right padding isn't guessable, it's minable:
+
+```python
+import numpy as np
+margin = clf.feature_log_prob_[0] - clf.feature_log_prob_[1]   # benign minus malicious
+inv = {v: k for k, v in vec.vocabulary_.items()}
+best = sorted(range(len(margin)), key=lambda i: margin[i])[-15:]
+pad = " ".join(inv[i] for i in best)
+```
+
+The winners are people's names — `sherry`, `john`, `jimmy`, `petunia`, `jester`, `otter`,
+`lilly`... the benign half of the training set is ordinary logins, and ordinary logins are full
+of ordinary names. Five repetitions of fifteen names push the margin to **+82.5** and the model
+waves the payload through:
+
+```python
+username = "admin\\"                        # backslash: string 1 swallows " AND password = "
+password = "||true-'" + pad * 5             # ... || true-'<pad>'  ->  FALSE || (1-0) -> TRUE
+```
+
+Rendered: `WHERE username = '<swallowed>' || true-'<pad>'` — the padding string coerces to 0,
+`true − 0` is 1, the OR makes the clause true for every row, `fetchone()` returns admin, flag.
+Verified against the live app with no HPP at all: **HTTP 200, logged in as admin**.
+
+### The WAF's other blind spots (no sink here, but keep them in mind)
+
+- Parameter **keys** are never checked — the hook iterates `for key, value in ...items()` and
+  scores only values.
+- **Headers and cookies** are never scored; `request.values` is query-string + form only.
+- Multipart **file fields** don't appear in `request.values` either.
+- The app ships with `debug=True` — if `vectorizer.transform` ever throws on a crafted value,
+  that's an unhandled exception in a `before_request` hook, i.e. the interactive Werkzeug
+  debugger. PIN-gated, but it's a real escalation path on a box where you can read `/proc`.
+
 ## Takeaways
 
-- **A WAF is only as good as its field of view.** The model was trained well and blocked
-  everything I knew — but it was pointed at the wrong copy of the data. Any time input is
-  parsed twice (proxy vs app, `values` vs `form`, sanitizer vs template), the two views are
-  attack surface.
+- **A WAF is only as good as its field of view.** The model blocked everything, but bypass one
+  pointed it at the wrong copy of the data; any time input is parsed twice (proxy vs app,
+  `values` vs `form`, sanitizer vs template), the two views are attack surface.
+- **Linear classifiers take orders from the sum.** Naive Bayes/SVM-style WAFs don't have an
+  "injection detector" — they have a ledger. A fixed malicious penalty can be outvoted by bulk
+  innocent evidence, and the model itself will tell you exactly which tokens it considers
+  innocent.
+- **Padding vocabulary is a trap.** Words from the *domain* you're attacking (user, login,
+  password) are exactly what the malicious training samples contain. Mine
+  `feature_log_prob_` instead of guessing — here the innocent words were people's names.
 - **Ship the model, lose the mystique.** Handing out the `.pkl` files turned "AI WAF" into a
   local, deterministic oracle. Every finding above was verified offline before a single request
   hit the server.
