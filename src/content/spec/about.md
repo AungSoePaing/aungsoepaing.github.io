@@ -2,13 +2,12 @@
 
 Hi, I'm **Aung Soe Paing** — a penetration tester from Myanmar with **over 4
 years of experience** in offensive security, specializing in web application,
-Android/mobile, cloud, and network penetration testing, with a strong focus on
+Android/mobile, and network penetration testing, with a strong focus on
 application security and Active Directory environments.
 
 ## What I do
 
-- Web, mobile, system, and network penetration testing (Burp Suite Pro,
-  Metasploit, Nmap, Nessus, custom scripts)
+- Web, mobile, system, and network penetration testing
 - Identifying, validating, and documenting vulnerabilities with clear evidence
 - Technical and executive reporting with CVSS risk ratings and actionable
   remediation guidance
@@ -23,14 +22,29 @@ application security and Active Directory environments.
 
 ## CTF achievements
 
-- 🏆 **1st Prize** — Myanmar Cyber Security Challenge 2023 (National)
-- 🥈 **1st Runner-Up** — Myanmar Cyber Security Challenge 2022 & 2024 (National)
-- 🏆 **1st Prize** — Cybergon Capture The Flag 2023
-- 🥉 **2nd Runner-Up** — Cybergon Capture The Flag 2024
-- **8th** — ASEAN Japan Cyber Sea Game 2022 & 2023 (Bangkok)
-- **8th** — ASEAN Cyber Shield Hacking Contest 2024 (Halong Bay)
-- **6th** — International Cyber Championship 2024
-- Regular finalist in ASEAN-region and international CTFs (Jakarta, Busan, online)
+### 2022
+
+- 🥈 **1st Runner-Up** — Myanmar Cyber Security Challenge (National)
+- **8th** — ASEAN Japan Cyber Sea Game (International, Bangkok)
+
+### 2023
+
+- 🏆 **1st Prize** — Myanmar Cyber Security Challenge (National)
+- 🏆 **1st Prize** — Cybergon Capture The Flag (Local)
+- **8th** — ASEAN Japan Cyber Sea Game (International, Bangkok)
+- **12th** — ASEAN Cyber Shield Hacking Contest (International, Jakarta)
+- **20th** — International Cyber Championship (Online)
+
+### 2024
+
+- 🥈 **1st Runner-Up** — Myanmar Cyber Security Challenge (National)
+- 🥉 **2nd Runner-Up** — Cybergon Capture The Flag (Local)
+- **8th** — ASEAN Cyber Shield Hacking Contest (International, Halong Bay)
+- **6th** — International Cyber Championship (Online)
+
+### 2025
+
+- **16th** — ASEAN Cyber Shield Hacking Contest (International, Busan)
 
 ## Labs & practice
 
