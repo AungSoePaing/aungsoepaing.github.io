@@ -1,19 +1,15 @@
-# About
-
 Hi, I'm **Aung Soe Paing** — a penetration tester from Myanmar with **over 4
-years of experience** in offensive security.
-
-## What I do
-
-Most of my day job is offensive testing: web applications and APIs, Android
-apps, and internal networks — with a lot of Active Directory work in the mix.
-My favorite moments are when a few "low" findings chain together into
+years** in offensive security. I break web applications and APIs, Android apps,
+and internal networks for a living, with a lot of Active Directory work in the
+mix. My favorite moments are when a few "low" findings chain together into
 something that actually gets a shell.
 
-When the testing is done I write the reports — technical enough for engineers
-to reproduce and fix, short enough for executives to act on — and help teams
-prioritize what to remediate first, instead of just dropping a list of
-findings.
+When the testing is done I write the reports — technical enough for engineers to
+reproduce and fix, short enough for executives to act on — and help teams
+prioritize what to remediate first, instead of just dropping a list of findings.
+
+This blog is where the other half lives: CTF/HTB writeups, security research
+notes, and projects — written in English and Burmese.
 
 ## Certifications
 
@@ -58,8 +54,3 @@ findings.
 
 - GitHub: [AungSoePaing](https://github.com/AungSoePaing)
 - LinkedIn: [aungsoepaing1337](https://www.linkedin.com/in/aungsoepaing1337/)
-
-## About this blog
-
-This is where I publish CTF/HTB writeups, security research notes, and
-projects — written in English and Burmese.
