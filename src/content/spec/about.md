@@ -4,10 +4,6 @@ and internal networks for a living, with a lot of Active Directory work in the
 mix. My favorite moments are when a few "low" findings chain together into
 something that actually gets a shell.
 
-When the testing is done I write the reports — technical enough for engineers to
-reproduce and fix, short enough for executives to act on — and help teams
-prioritize what to remediate first, instead of just dropping a list of findings.
-
 This blog is where the other half lives: CTF/HTB writeups, security research
 notes, and projects — written in English and Burmese.
 
