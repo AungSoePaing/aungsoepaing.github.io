@@ -1,5 +1,4 @@
-Hi, I'm **Aung Soe Paing** — a penetration tester from Myanmar with **over 4
-years** in offensive security. I break web applications and APIs, Android apps,
+Hi, I'm **Aung Soe Paing**. I break web applications and APIs, Android apps,
 and internal networks for a living, with a lot of Active Directory work in the
 mix. My favorite moments are when a few "low" findings chain together into
 something that actually gets a shell.
